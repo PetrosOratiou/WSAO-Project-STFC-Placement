@@ -1,4 +1,4 @@
-# WSAO-Project-STFC-Placement
+# WSAO Project STFC Placement
 This is a project assigned to me during my placement at the Central Laser facility (STFC RAL).
 
 The goal is to perform Adaptive Optics without the use of a wavefront sensor. Removing the need for a sensor is not just
