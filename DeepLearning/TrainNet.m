@@ -1,23 +1,25 @@
-clear; clc;
+clear; clc
 %% Generate farfields & coefficients
+
 orders = 36;
 resolution = 101;
-num_train_files = 10000;
-num_valid_files = 1000;
+num_train_files = 1600; % Optionally should be a mutiple of pool workers
+num_valid_files =  480; % Optionally should be a mutiple of pool workers
 
-generate_train_dataset(num_train_files,resolution,orders); % 40,000 images & targets
+generate_train_dataset(num_train_files,resolution,orders);
 generate_validation_dataset(num_valid_files,resolution,orders);
 
 % Lightweight network for testing
 layers = alexnet('Weights','None');
 layers(1) = imageInputLayer([resolution,resolution,1],'Name','input');
-layers(end-1) = regressionLayer('Name','output'); % replace softmax layer
+layers(end-1) = regressionLayer('Name','output');
 layers(end-2) = fullyConnectedLayer(orders,'Name','fc8');
 layers(end) = [];
 
 layerGraph(layers)
 
 %% Load to memory dialog
+
 msg = 'Load to memory?(Speeds up training but will take a long time to load)';
 answer = questdlg(msg,'Yes','No');
 switch answer
@@ -36,6 +38,8 @@ dsO = fileDatastore('.\Dataset\Observations\Validation','ReadFcn',@imread);
 dsR = fileDatastore('.\Dataset\Responses\Validation','ReadFcn',@readmatrix);
 validDS = combine(dsO,dsR);
 
+%% Load, Train, Predict
+
 if memload
     %% Load to RAM (optional)
     tic
@@ -51,8 +55,8 @@ if memload
 end
 
 if memload
-        %% Train network (Loaded)
-
+       %% Train network (Loaded)
+       
         options = trainingOptions('adam',...
             'plots','training-progress',...
             'MiniBatchSize',64,...
@@ -66,7 +70,7 @@ if memload
         net = trainNetwork(trainIms,trainTar,layers,options);
 else
     %% Train network (From disk)
-
+    
     options = trainingOptions('adam',...
         'plots','training-progress',...
         'MiniBatchSize',64,...
@@ -81,8 +85,8 @@ else
 end
 
 if memload
-    %% Predictions (Loaded)
-
+    %% Prediction (Loaded)
+    
     idx = round((size(validTar,1)-1) * rand + 1);
     preds = predict(net,validIms(:,:,1,idx));
 
@@ -95,8 +99,8 @@ if memload
     legend('Predicted','Actual','Sum')
     title('Testing once')
 else
-    %% Predictions (From disk)
-
+    %% Prediction (From disk)
+    
     dataset = read(validDS);
 
     validIms = permute(imcell2numeric(dataset(:,1)),[1,2,4,3]);
