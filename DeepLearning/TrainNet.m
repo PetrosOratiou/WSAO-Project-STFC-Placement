@@ -1,6 +1,5 @@
 clear; clc
 %% Generate farfields & coefficients
-
 orders = 36;
 resolution = 101;
 num_train_files = 1600; % Optionally should be a mutiple of pool workers
@@ -19,7 +18,6 @@ layers(end) = [];
 layerGraph(layers)
 
 %% Load to memory dialog
-
 msg = 'Load to memory?(Speeds up training but will take a long time to load)';
 answer = questdlg(msg,'Yes','No');
 switch answer
@@ -30,7 +28,6 @@ switch answer
 end
 
 %% Create datastore(s)
-
 dsO = fileDatastore('.\Dataset\Observations','ReadFcn',@imread);
 dsR = fileDatastore('.\Dataset\Responses','ReadFcn',@readmatrix);
 trainDS = combine(dsO,dsR);
@@ -39,7 +36,6 @@ dsR = fileDatastore('.\Dataset\Responses\Validation','ReadFcn',@readmatrix);
 validDS = combine(dsO,dsR);
 
 %% Load, Train, Predict
-
 if memload
     %% Load to RAM (optional)
     tic
@@ -56,7 +52,6 @@ end
 
 if memload
        %% Train network (Loaded)
-       
         options = trainingOptions('adam',...
             'plots','training-progress',...
             'MiniBatchSize',64,...
@@ -86,7 +81,6 @@ end
 
 if memload
     %% Prediction (Loaded)
-    
     idx = round((size(validTar,1)-1) * rand + 1);
     preds = predict(net,validIms(:,:,1,idx));
 
@@ -100,7 +94,6 @@ if memload
     title('Testing once')
 else
     %% Prediction (From disk)
-    
     dataset = read(validDS);
 
     validIms = permute(imcell2numeric(dataset(:,1)),[1,2,4,3]);
