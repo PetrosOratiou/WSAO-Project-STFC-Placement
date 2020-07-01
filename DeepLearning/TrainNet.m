@@ -1,4 +1,4 @@
-clear; clc
+clear; clc;
 %% Generate farfields & coefficients
 orders = 36;
 resolution = 101;
