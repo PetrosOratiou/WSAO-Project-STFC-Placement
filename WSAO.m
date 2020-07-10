@@ -7,12 +7,13 @@ crop_amount = 10;   % Amount to remove from polys
 iterations  = 42;   % Optimisation Iterations
 dm_response = 0.1;  % Mirror response time in sec
 
-%rng_seed    = 233; % 1122;
+%rng_seed = 1122;
 %rng(rng_seed)
 
-addpath('AO Simulation');
-addpath('Optimisation Algorithms');
-addpath('Utilities');
+addpath('WSAO')
+addpath(fullfile('WSAO','AO Simulation'));
+addpath(fullfile('WSAO','Optimisation Algorithms'));
+addpath(fullfile('WSAO','Utilities'));
 
 % Generate Polynomials
 uncropped_polys = leg_polys(orders,resolution + 2*crop_amount);
@@ -38,7 +39,7 @@ initff = FF.generate_farfield(1,initwf)*1e-6;
 % Create solver object to solve objective function
 fhandle = @(r) cost_function(r,initwf,mirror,FF);
 solver = pattern_search(channels,fhandle); % Chose one from optimisation algorithms folder
-%solver.settings(0.01,0.1,0.1,0);  % Use this for gradient descent (gdm)
+%solver.settings(0.01,0.1,0.1,0);
 
 fig = figure(1);
 axis tight manual
@@ -70,7 +71,7 @@ for i = 1:iterations
     
     % Log current cost and number of evals
     cost(i) = fhandle(solver.position);
-    evals(i) = solver.evaluations; % If you want use this instead of iterations (bottom plot)
+    evals(i) = solver.evaluations;
     
     nexttile(3,[1,1])
     plotWF(outwf);
@@ -83,7 +84,7 @@ for i = 1:iterations
     nexttile(5,[1,2]);
     plot(cost);
     title("Performance");
-    xlabel("Iterations");
+    xlabel("Evaluations");
     ylabel("Cost");
     txt = sprintf("est.Duration: %.2f min",solver.evaluations*dm_response/60);
     text(0.6,0.85,txt,'Units','normalized','FontSize',14)
