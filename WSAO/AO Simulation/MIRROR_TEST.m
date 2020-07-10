@@ -17,7 +17,7 @@
 [~, mirror] = MirrorMaker;
 % 
 % %% Run this section to load from file
-% load new_square influences
+% load('Mirror presets\new_square','influences');
 % mirror = mirror_model(influences);
 %% 3rd Section
 
