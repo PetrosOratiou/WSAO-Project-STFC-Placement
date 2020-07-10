@@ -70,7 +70,7 @@ for i = 1:iterations
     
     % Log current cost and number of evals
     cost(i) = fhandle(solver.position);
-    evals(i) = solver.evaluations;
+    evals(i) = solver.evaluations; % If you want use this instead of iterations (bottom plot)
     
     nexttile(3,[1,1])
     plotWF(outwf);
@@ -83,7 +83,7 @@ for i = 1:iterations
     nexttile(5,[1,2]);
     plot(cost);
     title("Performance");
-    xlabel("Evaluations");
+    xlabel("Iterations");
     ylabel("Cost");
     txt = sprintf("est.Duration: %.2f min",solver.evaluations*dm_response/60);
     text(0.6,0.85,txt,'Units','normalized','FontSize',14)
