@@ -38,7 +38,7 @@ initff = FF.generate_farfield(1,initwf)*1e-6;
 % Create solver object to solve objective function
 fhandle = @(r) cost_function(r,initwf,mirror,FF);
 solver = pattern_search(channels,fhandle); % Chose one from optimisation algorithms folder
-%solver.settings(0.01,0.1,0.1,0);
+%solver.settings(0.01,0.1,0.1,0);  % Use this for gradient descent (gdm)
 
 fig = figure(1);
 axis tight manual
