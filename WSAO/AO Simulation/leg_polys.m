@@ -3,7 +3,7 @@ function polys = leg_polys(ords, resol)
     N = sqrt(ords);
     % Check user input
     if N ~= round(N)
-        error('N must be the square of a natural number. eg. 16,25,32,...');
+        error('N must be the square of a natural number. eg. 16,25,36,...');
     end
     x = linspace(-1, 1, resol)';
     Y = zeros(N,resol);
